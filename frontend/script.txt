@@ -1,0 +1,17 @@
+domain="test.com"
+directory="testpath"
+Update VH:
+	1- update domain in virtual host.
+	2- update root directory
+	/etc/nginx/conf.d
+	644 root:root
+
+/usr/share/nginx
+sudo mkdir -p /usr/share/nginx/$domain
+sudo chown -R $USER:$USER /var/www/$domain/html
+sudo chmod -R 755 /var/www
+sudo cp  
+
+##############
+Pending issues
+1- ask about the validity of the script
