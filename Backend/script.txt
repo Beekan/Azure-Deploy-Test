@@ -1,0 +1,25 @@
+domain=<replace-with-www.{yourdomain}>
+webappname=y-peer-test
+resourceGroup=Demo
+
+az deployment group create --resource-group $resourceGroup --parameters webAppName="$webappname" --template-file ./appService.json
+
+#DNS integration should be in this step
+
+az webapp config hostname add --webapp-name $webappname --resource-group $resourceGroup --hostname $domain
+
+thumbprint=$(az webapp config ssl import --resource-group $resourceGroup --name $webappname --key-vault MyKeyVault --key-vault-certificate-name MyCertificateName --query thumbprint --output tsv)
+
+az webapp config ssl bind --certificate-thumbprint $thumbprint --ssl-type SNI --name $webappname --resource-group $resourceGroup
+
+
+#############
+Pending issues:
+1- Find a way to integrate DNS 
+	1.1-could be by pausing the script - this could be done using the input plugin in jenkins
+	1.2-creating a specific role with add only privleges and login with that account to use cli
+2- Create keyVaults for certificate
+3- the template appService.json deploys to app service plan called demotest. this would also be hardcoded in the final job but needs to be changed to the actual deployment app service plan name.
+4- Jenkins job should use azure cli (ask if mySp is the credentials to use)
+
+
